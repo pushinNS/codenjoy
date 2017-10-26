@@ -34,9 +34,10 @@ var printArray = function (array) {
 var util = require('util');
 
 //var hostIp = '127.0.0.1';
-var hostIp = 'tetrisj.jvmhost.net';
+// var hostIp = 'tetrisj.jvmhost.net';
+var hostIp = 'localhost';
 
-var userName = 'apofig';
+var userName = 'js@js.com';
 var protocol = 'WS';
 
 var processBoard = function(boardString) {
