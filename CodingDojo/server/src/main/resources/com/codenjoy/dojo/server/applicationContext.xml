@@ -34,10 +34,12 @@
 
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="location" value="classpath:/com/codenjoy/dojo/server/codenjoy.properties"/>
+        <property name="searchSystemEnvironment" value="true" />
+        <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
     </bean>
 
     <import resource="applicationContext-database-postgre.xml"/>
-    <!--<import resource="applicationContext-database.xml"/>-->
+    <import resource="applicationContext-database.xml"/>
 
     <bean id="timerService" class="com.codenjoy.dojo.services.TimerService" init-method="init">
         <property name="period" value="1000"/>
