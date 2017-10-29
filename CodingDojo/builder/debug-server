@@ -1,0 +1,8 @@
+#!/bin/bash
+export SPRING_PROFILES_ACTIVE=postgre
+#export MAVEN_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=8000 -Xmx1024m -Dmaven.test.skip=true
+export MAVEN_OPTS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=8000 -Xmx1024m -Dmaven.test.skip=true -Ddatabase.host=nifleheim -Demail.verification=true"
+# -Djetty.port=8081
+#export MAVEN_OPTS="-Xmx1024m -Dmaven.test.skip=true"
+
+mvn clean jetty:run-war
