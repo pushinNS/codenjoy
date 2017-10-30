@@ -23,12 +23,12 @@ package com.codenjoy.dojo.services.mail;
  */
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 import javax.mail.*;
-import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.Properties;
@@ -36,39 +36,23 @@ import java.util.Properties;
 @Component
 public class MailService {
 
+    private static Logger logger = LoggerFactory.getLogger(MailService.class);
+
     @Value("${email.password}")
     private String emailPassword;
 
     @Value("${email.name}")
     private String emailName;
 
-    public void sendEmail(String to, String title, String body) throws MessagingException {
-        if (StringUtils.isEmpty(emailName)) {
-            return;
-        }
-        String port = "465";
+    @Value("${email.smtp.port}")
+    private String smtpPort;
 
-        Properties props = System.getProperties();
-        props.put("mail.transport.protocol", "smtps");
-        props.put("mail.smtp.host", "gc2.nodecluster.net");
-//        props.put("mail.smtp.host", "mail.codenjoy.com");
-//        props.put("mail.smtp.port", "26");
-        props.put("mail.smtp.port", port);
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.ssl.enable", "true");
-        props.setProperty("mail.smtp.ssl.trust", "gc2.nodecluster.net");
-        props.put("mail.smtp.user", emailName);
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.EnableSSL.enable", "true");
-        props.put("mail.debug", "true");
-        props.put("mail.password", emailPassword);
-        props.put("mail.user", emailName);
-        props.put("mail.from", emailName);
-        props.put("mail.smtp.localhost", "codenjoy.com");
-        props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-        props.put("mail.smtp.socketFactory.fallback", "false");
-        props.put("mail.smtp.port", port);
-        props.put("mail.smtp.socketFactory.port", port);
+    @Value("${email.smtp.host}")
+    private String smtpHost;
+
+    public void sendEmail(String to, String title, String body) throws MessagingException {
+        logger.info("Sending confirmation link to: {}", to);
+        Properties props = initProps();
 
         // Get the default Session object.
         Session session = Session.getInstance(props, new Authenticator() {
@@ -86,5 +70,28 @@ public class MailService {
         Transport.send(message);
     }
 
-
+    private Properties initProps() {
+        Properties props = System.getProperties();
+        props.put("mail.transport.protocol", "smtps");
+        props.put("mail.smtp.host", smtpHost);
+//        props.put("mail.smtp.host", "mail.codenjoy.com");
+//        props.put("mail.smtp.port", "26");
+        props.put("mail.smtp.port", smtpPort);
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.ssl.enable", "true");
+        props.setProperty("mail.smtp.ssl.trust", "gc2.nodecluster.net");
+        props.put("mail.smtp.user", emailName);
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.EnableSSL.enable", "true");
+        props.put("mail.debug", "true");
+        props.put("mail.password", emailPassword);
+        props.put("mail.user", emailName);
+        props.put("mail.from", emailName);
+        props.put("mail.smtp.localhost", "codenjoy.com");
+        props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        props.put("mail.smtp.socketFactory.fallback", "false");
+        props.put("mail.smtp.port", smtpPort);
+        props.put("mail.smtp.socketFactory.port", smtpPort);
+        return props;
+    }
 }
